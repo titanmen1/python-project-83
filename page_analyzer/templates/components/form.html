@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+<form action="{{ url_for('post_url_for_checking')}} " method="post" class="d-flex justify-content-center" required>
+    <input type="text" name="url" placeholder="https://www.example.com"value="{{ url_name }}"  class="form-control form-control-lg">
+    <input type="submit" class="btn btn-primary  btn-lg ms-3 px-5 text-uppercase mx-3" value="Проверить">
+</form>
