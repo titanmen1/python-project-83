@@ -17,25 +17,29 @@ def check_url_exists(connection, url):
 
 
 def insert_url(connection, url):
+    query = f"INSERT INTO urls (name, created_at) VALUES ('{url}', '{datetime.datetime.now()}') RETURNING id;"
+
     with connection.cursor(cursor_factory=NamedTupleCursor) as cursor:
-        cursor.execute(
-            f"INSERT INTO urls (name, created_at) VALUES ('{url}', '{datetime.datetime.now()}') RETURNING id;",
-        )
-        url_id = cursor.fetchone().id
+        cursor.execute(query)
+        url_info = cursor.fetchone()
     connection.commit()
-    return url_id
+    return url_info.id
 
 
 def get_url_by_id(connection, url_id):
+    query = f"SELECT id, name FROM urls WHERE id={url_id};"
+
     with connection.cursor(cursor_factory=NamedTupleCursor) as cursor:
-        cursor.execute(f'SELECT id, name FROM urls WHERE id={url_id}')
+        cursor.execute(query)
         url = cursor.fetchone()
     return url
 
 
 def get_url_by_name(connection, url_name):
+    query = f"SELECT id, name FROM urls WHERE name='{url_name}';"
+
     with connection.cursor(cursor_factory=NamedTupleCursor) as cursor:
-        cursor.execute(f"SELECT id, name FROM urls WHERE name='{url_name}'")
+        cursor.execute(query)
         url = cursor.fetchone()
     return url
 
@@ -44,7 +48,7 @@ def get_checks_info_of_url(connection, url_id):
     query = f'''SELECT id, status_code, h1, title, description, DATE(created_at)
             FROM url_checks
             WHERE url_id='{url_id}'
-            ORDER BY id DESC'''
+            ORDER BY id DESC;'''
 
     with connection.cursor(cursor_factory=NamedTupleCursor) as cursor:
         cursor.execute(query)
@@ -52,14 +56,15 @@ def get_checks_info_of_url(connection, url_id):
 
 
 def insert_checks_result(connection, url_id, checks_result):
-    status_code = checks_result['status_code']
-    h1 = checks_result['h1']
-    title = checks_result['title']
-    description = checks_result['description']
-
     query = (
         f'''INSERT INTO url_checks (url_id, status_code, h1, title, description)
-            VALUES ({url_id}, {status_code}, '{h1}', '{title}', '{description}');'''
+            VALUES (
+                {url_id}, 
+                {checks_result['status_code']},
+                '{checks_result['h1']}', 
+                '{checks_result['title']}',
+                '{checks_result['description']}'
+            );'''
     )
 
     with connection.cursor(cursor_factory=NamedTupleCursor) as cursor:
