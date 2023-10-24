@@ -41,7 +41,7 @@ def post_url_for_checking():
     validated_url = url(parsed_url)
 
     if not validated_url:
-        flash('Некорректный URL')
+        flash('Некорректный URL', 'danger')
         return render_template('index.html'), 422
 
     connection = db.get_db(app)
