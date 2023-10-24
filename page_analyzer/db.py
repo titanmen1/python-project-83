@@ -34,7 +34,7 @@ def get_url_by_id(connection, url_id):
 
 def get_url_by_name(connection, url_name):
     with connection.cursor(cursor_factory=NamedTupleCursor) as cursor:
-        cursor.execute(f'SELECT id, name FROM urls WHERE name={url_name}')
+        cursor.execute(f"SELECT id, name FROM urls WHERE name='{url_name}'")
         url = cursor.fetchone()
     return url
 
