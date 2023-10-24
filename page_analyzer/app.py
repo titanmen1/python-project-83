@@ -27,12 +27,7 @@ def urls_show():
     connection = db.get_db(app)
     data = db.get_urls_with_checks(connection)
 
-    return render_template(
-        'urls/index.html',
-        data=data,
-    )
-
-
+    return render_template('index.html', data=data)
 
 
 @app.route('/urls', methods=['POST'])
