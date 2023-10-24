@@ -6,7 +6,7 @@ from flask import Flask, render_template, request, flash, redirect, url_for
 from validators import url
 
 from page_analyzer import db
-from page_analyzer.utils import parse_url
+from page_analyzer.utils import parse_url, get_site_info
 
 load_dotenv()
 app = Flask(__name__)
@@ -57,7 +57,7 @@ def post_url_for_checking():
         flash('Страница успешно добавлена', 'success')
         return redirect(url_for('get_url', url_id=url_id))
     else:
-        url_id = 5
+        url_id = db.get_url_by_name(connection, parsed_url).id
         return redirect(url_for('get_url', url_id=url_id))
 
 
@@ -75,11 +75,11 @@ def check_url(url_id):
     connection = db.get_db(app)
     url_info = db.get_url_by_id(connection, url_id)
 
-    checks_list = db.get_checks_info_of_url(connection, url_id)
-    if checks_list is False:
+    checks_result = get_site_info(url_info.name)
+    if checks_result is False:
         flash('Произошла ошибка при проверке', 'error')
     else:
-        db.insert_checks_result(connection, url_id, checks_list)
+        db.insert_checks_result(connection, url_id, checks_result)
         flash('Страница успешно проверена', 'success')
 
     return redirect(url_for('get_url', url_id=url_id))

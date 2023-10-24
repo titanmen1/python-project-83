@@ -63,6 +63,7 @@ def insert_checks_result(connection, url_id, checks_result):
 
     with connection.cursor(cursor_factory=NamedTupleCursor) as cursor:
         cursor.execute(query)
+    connection.commit()
 
 
 def get_urls_with_checks(conn):
