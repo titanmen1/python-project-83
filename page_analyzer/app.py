@@ -53,6 +53,7 @@ def post_url_for_checking():
         return redirect(url_for('get_url', url_id=url_id))
     else:
         url_id = db.get_url_by_name(connection, parsed_url).id
+        flash('Страница уже существует', 'success')
         return redirect(url_for('get_url', url_id=url_id))
 
 
