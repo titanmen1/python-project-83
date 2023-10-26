@@ -59,9 +59,9 @@ def insert_checks_result(connection, url_id, checks_result):
     query = (
         f'''INSERT INTO url_checks (url_id, status_code, h1, title, description)
             VALUES (
-                {url_id}, 
+                {url_id},
                 {checks_result['status_code']},
-                '{checks_result['h1']}', 
+                '{checks_result['h1']}',
                 '{checks_result['title']}',
                 '{checks_result['description']}'
             );'''
